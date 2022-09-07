@@ -73,6 +73,8 @@ The commands with an `=` sign in them are command line arguments that can be var
 
 - I used a Finite State Machine (FSM) to model the vending  machine as it seemed like a good fit given the transitional nature of the interactions between user and machine. The FSM is a very barebones implementation, in reality something like [pytransitions](https://github.com/pytransitions/transitions) may be more robust.
 
+- A mapping of product ids and prices is kept as a class variable within the `ProductFactory` class as a class variable named `_PRICE_MAP`. This was done mainly for simplicity and to ensure that a mapping between prices and products was kept in a single place.
+
 - [pydantic](https://pydantic-docs.helpmanual.io/) is minimally used for data validation, although if the project grew in scope, using it would demonstrate its effectiveness a bit more.
 
 - I usec [pytest](https://docs.pytest.org/en/7.1.x/) for unit testing as it's much more succint vs the `unnittest` library that ships with the standard lib in Python.
