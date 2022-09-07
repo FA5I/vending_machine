@@ -76,3 +76,5 @@ The commands with an `=` sign in them are command line arguments that can be var
 - I usec [pytest](https://docs.pytest.org/en/7.1.x/) for unit testing as it's much more succint vs the `unnittest` library that ships with the standard lib in Python.
 
 - The most challenging bit of code was the `VendingMachine._construct_change` function. I used a memoization approach to compute the minimum number of coins that could be returned to fulfill the change returned to the user. I wanted to return the minimum number of coins so as to keep the vending machine float filled for as long as possible.
+
+- For CI/CD a simple Github workflow file is defined in `.github/workflows/actions.yaml`. I chose `Black` as the formatter for the code mainly as it it's opinionated and does a good job with minimal config.
