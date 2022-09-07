@@ -8,7 +8,9 @@ Run the following commands from the root folder:
 - `pipenv install --editable .`
 - `vending_machine`
 
-Once you have done this, you should see a `>` prompt in the terminal. The CLI is now running.
+Once you have done this, you should see a `>` prompt in the terminal. The CLI is now running. 
+
+See the Commands section below for information on how to interact with it.
 
 ## File Overview
 
