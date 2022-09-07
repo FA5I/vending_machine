@@ -1,1 +1,18 @@
 
+2022-09-07T22:56:36.870495 - select_product failure - exception: Invalid state transition attempted from State.PRODUCT_SELECTED to State.PRODUCT_SELECTED.
+2022-09-07T22:56:45.502497 - select_product failure - exception: Invalid state transition attempted from State.PRODUCT_SELECTED to State.PRODUCT_SELECTED.
+2022-09-07T22:58:38.393767 - select_product failure - exception: Invalid state transition attempted from State.PRODUCT_SELECTED to State.PRODUCT_SELECTED.
+2022-09-07T23:33:14.873599 - select_product failure - exception: Invalid state transition attempted from State.PRODUCT_SELECTED to State.PRODUCT_SELECTED.
+2022-09-07T23:33:34.454060 - select_product failure - exception: Invalid state transition attempted from State.PRODUCT_SELECTED to State.PRODUCT_SELECTED.
+2022-09-07T23:33:35.639949 - select_product failure - exception: Invalid state transition attempted from State.PRODUCT_SELECTED to State.PRODUCT_SELECTED.
+2022-09-07T23:33:53.883053 - select_product failure - exception: Incorrect product name. There is no such product in the vending machine.
+2022-09-07T23:35:27.058684 - init failure - exception: Machine has already been initialized!
+2022-09-07T23:35:36.182945 - init failure - exception: Machine has already been initialized!
+2022-09-07T23:35:50.495196 - init failure - exception: Machine has already been initialized!
+2022-09-07T23:40:27.347614 - cancel_tx failure - exception: Invalid state transition attempted from State.IDLE to State.IDLE.
+2022-09-07T23:45:15.269385 - select_product failure - exception: Cannot cancel tx - there is none. You must first select a product.
+2022-09-07T23:47:06.449336 - select_product failure - exception: Cannot cancel tx - there is none. You must first select a product.
+2022-09-07T23:47:10.614616 - cancel_tx failure - exception: Cannot cancel tx - there is none. First select a product.
+2022-09-07T23:56:47.106500 - get_change failure - exception: Cannot construct correct change. Please cancel transaction.
+2022-09-08T00:05:49.578573 - get_change failure - exception: Cannot construct correct change. Please cancel transaction.
+2022-09-08T00:08:43.246194 - get_change failure - exception: Cannot construct correct change. Please cancel transaction.

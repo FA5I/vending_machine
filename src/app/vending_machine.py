@@ -3,13 +3,19 @@ from typing import Optional
 from src.app.product import ProductFactory
 from src.app.transaction import Transaction
 from src.app.fsm import FiniteStateMachine, State
-from src.app.utilities import COIN_DENOMINATIONS
+from src.app.utilities import COIN_DENOMINATIONS, InvalidStateException, InsufficientBalanceException
 
 class VendingMachine(FiniteStateMachine):
+	""" Defines a representation of a vending machine.
+
+	Keyword arguments:
+	balances -- the balances of each coin denomination. (optional)
+	"""
+
 	
 	transition_graph = {
 		State.IDLE: [ State.PRODUCT_SELECTED ],
-		State.PRODUCT_SELECTED: [ State.TRANSACTION_IN_PROGRESS, State.TRANSACTION_READY, State.IDLE ],
+		State.PRODUCT_SELECTED: [ State.PRODUCT_SELECTED, State.TRANSACTION_IN_PROGRESS, State.TRANSACTION_READY, State.IDLE ],
 		State.TRANSACTION_IN_PROGRESS: [ State.TRANSACTION_IN_PROGRESS, State.TRANSACTION_READY, State.IDLE ],
 		State.TRANSACTION_READY: [ State.TRANSACTION_READY, State.TRANSACTION_COMPLETED, State.IDLE ],
 	}
@@ -22,14 +28,30 @@ class VendingMachine(FiniteStateMachine):
 		
 
 	@property
+	def state(self):
+		return self._state
+
+	
+	@property
 	def balances(self):
 		return self._balances
 
+	
+	@property
+	def current_transaction(self):
+		return self._current_transaction
+
+
+	@current_transaction.setter
+	def current_transaction(self, value):
+		self._current_transaction = value
+
+	
 	def _transition_state(self, dest: State) -> None:
 		"""Handles transitioning from current state to `dest`."""
 
 		if dest not in VendingMachine.transition_graph[self._state]:
-			raise ValueError(f'Invalid state transition attempted from {self._state} to {dest}.')
+			raise InvalidStateException(f'Invalid state transition attempted from {self._state} to {dest}.')
 		
 		self._state = dest
 
@@ -38,7 +60,7 @@ class VendingMachine(FiniteStateMachine):
 		"""Cancels the current transaction and returns the vending machine to an `IDLE` state."""
 	
 		self._transition_state(State.IDLE)
-		self._current_transaction = None
+		self.current_transaction = None
 		
 		
 	def select_product(self, product_id) -> None:
@@ -48,7 +70,7 @@ class VendingMachine(FiniteStateMachine):
 		tx = Transaction(product=product)
 
 		self._transition_state(State.PRODUCT_SELECTED)
-		self._current_transaction = tx
+		self.current_transaction = tx
 
 	
 	def insert_coins(self, denomination: int, quantity) -> None:
@@ -60,16 +82,16 @@ class VendingMachine(FiniteStateMachine):
 		if quantity < 0:
 			raise ValueError(f'Invalid coin quantity of `{quantity}`.')
 
-		if self._current_transaction is None:
-			raise ValueError(f'Current transaction must be set first.')
+		if self.current_transaction is None:
+			raise Exception(f'Current transaction must be set first.')
 
-		if self._inserted_coin_balance() + denomination * quantity >= self._current_transaction.product.price:
+		if self._inserted_coin_balance() + denomination * quantity >= self.current_transaction.product.price:
 			self._transition_state(State.TRANSACTION_READY)
 
 		else:
 			self._transition_state(State.TRANSACTION_IN_PROGRESS)
 		
-		self._current_transaction.deposited_coins[denomination] += quantity
+		self.current_transaction.deposited_coins[denomination] += quantity
 		
 
 	def _inserted_coin_balance(self) -> int:
@@ -77,7 +99,7 @@ class VendingMachine(FiniteStateMachine):
 		
 		total = 0
 		for c in COIN_DENOMINATIONS:
-			quantity = self._current_transaction.deposited_coins.get(c, 0)
+			quantity = self.current_transaction.deposited_coins.get(c, 0)
 			total += c * quantity
 		return total
 
@@ -87,7 +109,7 @@ class VendingMachine(FiniteStateMachine):
 		If the user balance is too low to cover the product, return 0.
 		"""
 		
-		return max(0, self._inserted_coin_balance() - self._current_transaction.product.price)
+		return max(0, self._inserted_coin_balance() - self.current_transaction.product.price)
 
 	def _construct_change(self) -> list:
 		"""This function returns the minimum number of coins that can be used from the existing
@@ -136,10 +158,17 @@ class VendingMachine(FiniteStateMachine):
 		change_required = self._construct_change()
 
 		if change_required is None:
-			raise Exception('Cannot construct correct change. Please cancel transaction.')
+			raise InsufficientBalanceException('Cannot construct correct change. Please cancel transaction.')
 
 		for c in change_required:
 			self.balances[c] -= 1
 
+		self._transition_state(State.IDLE)
+
 		return change_required
 	
+
+	def return_inserted_coins(self) -> dict:
+		coins = self.current_transaction.deposited_coins
+		self.cancel_tx()
+		return coins

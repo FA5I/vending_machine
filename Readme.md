@@ -8,6 +8,12 @@ Run the following commands from the root folder:
 - `pipenv install --editable .`
 - `vending_machine`
 
+You can also run tests via:
+
+- `pipenv shell`
+- `pytest ./src/tests/tests.py -s`
+
+
 Once you have done this, you should see a `>` prompt in the terminal. The CLI is now running. 
 
 See the Commands section below for information on how to interact with it.
@@ -22,14 +28,14 @@ See the Commands section below for information on how to interact with it.
 	- `logging.py`: contains a custom logger that logs to the `vending_machine.log` file.
 	- `product.py`: contains the class definition for a product, and also a product factory.
 	- `transaction.py`: contains the class definition for a transaction.
-	- `utilties.py`: contains ad hoc code used in multiple files (pretty bare at the moment).
+	- `utilties.py`: contains ad hoc code used in multiple files (pretty bare at the moment). Also contains some custom exceptions.
 	- `vending_machines.py`: contains the code for the vending machine that really drives the app.
 
 ### `src/tests` directory
 
 - This contains all the unit tests.
 - Unit tests can be run using the following command from the project root directory:
-	- `pytest ./src/tests/tests.py`
+	- `pytest ./src/tests/tests.py -s`
 
 
 ### Other files of interest
@@ -69,7 +75,7 @@ The commands with an `=` sign in them are command line arguments that can be var
 
 - I avoided using web server with a REST API as that seemed like overkill for a vending machine. A CLI with a REPL-like behaviour seemed more appropriate.
 
-- Errors and exception handling were used in places deemed logical. If given more time, there is definitely scope to increase the types of custom errors to be more explicit about the errors being thrown.
+- Errors and exception handling were used in places deemed logical. If given more time, there is definitely scope to increase the types of custom errors to be more explicit about the errors being thrown. Right now the most basic error handling is implemented to catch the main exceptions.
 
 - I used a Finite State Machine (FSM) to model the vending  machine as it seemed like a good fit given the transitional nature of the interactions between user and machine. The FSM is a very barebones implementation, in reality something like [pytransitions](https://github.com/pytransitions/transitions) may be more robust.
 

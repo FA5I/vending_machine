@@ -9,5 +9,7 @@ logger.addHandler(fh)
 
 
 def log_to_file(msg, exception):
+	"""Logs a message and exception to file."""
+
 	logger.error(f'{datetime.datetime.now().isoformat()} - {msg} - exception: {exception}')
 		
